@@ -204,7 +204,6 @@ public class DeepZoomSample extends AppCompatActivity implements View.OnClickLis
     }
 
 
-
     private void targetView() {
         TapTargetView.showFor(this, TapTarget.forView(findViewById(R.id.imgShare), "please click share button if want to share image otherwise click out of circle")
                 .cancelable(true)
@@ -214,7 +213,11 @@ public class DeepZoomSample extends AppCompatActivity implements View.OnClickLis
             @Override
             public void onTargetClick(TapTargetView view) {
                 super.onTargetClick(view);
-                Utils.shareImageFromSd(mWallpaper.getThumbnail());
+                if (Build.VERSION.SDK_INT >= 25) {
+                    shareImageNougat2(mWallpaper.getThumbnail());
+                } else {
+                    Utils.shareImageFromSd(mWallpaper.getThumbnail());
+                }
                 Utils.savePref("targetView", "1");
                 // .. which evidently starts the sequence we defined earlier
             }
@@ -286,15 +289,43 @@ public class DeepZoomSample extends AppCompatActivity implements View.OnClickLis
         notificationManager.notify(1, builder.build());
     }
 
+    public void shareImageNougat() {
+        File imagePath = new File(uri.getPath());
+        Intent share = new Intent(Intent.ACTION_SEND);
+//        share.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//        String fileName = s.substring(s.lastIndexOf("/") + 1);
+        Uri contentUri = getUriForFile(this, getApplicationContext().getPackageName() + ".provider", imagePath);
+        share.setDataAndType(contentUri, "image/*");
+        share.putExtra(Intent.EXTRA_STREAM, contentUri);
+        startActivity(share);
+    }
+
+    public void shareImageNougat2(String s) {
+        String fileName = s.substring(s.lastIndexOf("/") + 1);
+        File root = Environment.getExternalStorageDirectory();
+        Uri path = FileProvider.getUriForFile(this, "com.quiro.fileproviderexample.fileprovider", new File(root.getPath() + "/" + "RelaxationMeditation" + "/" + fileName));
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, "send image");
+        intent.putExtra(Intent.EXTRA_STREAM, path);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setType("image/*");
+        startActivity(Intent.createChooser(intent, "Share via"));
+    }
+
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.imgShare) {
 //            MyApp.getInstance().setupAnalyticsEvent("Share Image", mWallpaper.getThumbnail());
-//            if (Build.VERSION.SDK_INT >= 24) {
-//            } else {
-//                Utils.shareImageFromSd(mWallpaper.getThumbnail());
-//            }
-            Utils.shareImageFromSd(mWallpaper.getThumbnail());
+            if (Build.VERSION.SDK_INT >= 25) {
+                shareImageNougat2(mWallpaper.getThumbnail());
+            } else {
+                Utils.shareImageFromSd(mWallpaper.getThumbnail());
+            }
+
+
+//            Utils.shareImageNougat(mWallpaper.getThumbnail());
+//            Utils.shareImageFromSd(mWallpaper.getThumbnail());
 
 //            Utils.shareImage(DeepZoomSample.this, mWallpaper.getOriginal());
 //            Utils.shareOption(DeepZoomSample.this, mWallpaper.getOriginal());

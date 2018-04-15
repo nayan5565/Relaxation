@@ -81,7 +81,6 @@ public class Utils {
 //        share.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         share.setType("image/*");
         String fileName = s.substring(s.lastIndexOf("/") + 1);
-        Uri photoURI = FileProvider.getUriForFile(MyApp.getInstance().getApplicationContext(), MyApp.getInstance().getApplicationContext().getPackageName() + ".my.package.name.provider", new File(root.getPath() + "/" + "RelaxationMeditation" + "/" + fileName));
         share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(root.getPath() + "/" + "RelaxationMeditation" + "/" + fileName)));
         MyApp.getInstance().getApplicationContext().startActivity(Intent.createChooser(share, "Share via"));
     }
