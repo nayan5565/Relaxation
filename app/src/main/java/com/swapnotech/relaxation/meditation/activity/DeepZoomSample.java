@@ -74,11 +74,13 @@ public class DeepZoomSample extends AppCompatActivity implements View.OnClickLis
     private static final String AUTHORITY = "com.commonsware.android.cp.v4file";
 
     private Uri uri;
+    ImageView imgCk;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.lay_single_image);
+
 
         Intent intent = getIntent();
         uri = intent.getParcelableExtra("uri");
@@ -122,19 +124,19 @@ public class DeepZoomSample extends AppCompatActivity implements View.OnClickLis
             targetView();
         handler = new Handler();
 
-        Ion.with(this)
-//                .load(new File(Environment.getExternalStorageDirectory().getPath() + "/" + "RelaxationMeditation" + "/" + downlaodedImage))
-                .load(Global.singleWallpaperURL)
-                .setLogging("DeepZoom", Log.VERBOSE)
-                .withBitmap()
-                .deepZoom()
-                .intoImageView(photo)
-                .setCallback(new FutureCallback<ImageView>() {
-                    @Override
-                    public void onCompleted(Exception e, ImageView result) {
-//                        dlg.cancel();
-                    }
-                });
+//        Ion.with(this)
+////                .load(new File(Environment.getExternalStorageDirectory().getPath() + "/" + "RelaxationMeditation" + "/" + downlaodedImage))
+//                .load(Global.singleWallpaperURL)
+//                .setLogging("DeepZoom", Log.VERBOSE)
+//                .withBitmap()
+//                .deepZoom()
+//                .intoImageView(photo)
+//                .setCallback(new FutureCallback<ImageView>() {
+//                    @Override
+//                    public void onCompleted(Exception e, ImageView result) {
+////                        dlg.cancel();
+//                    }
+//                });
 
 
 //        File f = new File(getFilesDir(), "test.pdf");
